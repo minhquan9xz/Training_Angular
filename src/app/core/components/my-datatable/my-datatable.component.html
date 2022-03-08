@@ -1,0 +1,70 @@
+<div class="container">
+    <div class="row">
+
+        <div class="col-3 search">
+            <input type="text" placeholder="Search Tên" [(ngModel)]="searchName" (ngModelChange)="search()" />
+        </div>
+
+
+        <div class="col-3 search">
+            <input type="text" placeholder="Search địa chỉ" [(ngModel)]="searchAddress" (ngModelChange)="search()" />
+        </div>
+
+        <div class="col-3 search">
+            <input type="text" placeholder="Search Email" [(ngModel)]="searchEmail" (ngModelChange)="search()" />
+        </div>
+
+        <div class="col-3 search">
+
+            <select (change)="search()" [(ngModel)]="searchGen">
+                <option value="">Gender</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+            </select>
+
+            <!-- <button style="margin-left: 30px;" (click)="openAddAccount()">Add</button> -->
+            <button type="button" class="btn btn-primary" style="margin-left: 30px;" (click)="openAddAccount()">Add</button>
+        </div>
+    </div>
+    <div>
+        <table border="1">
+            <thead>
+                <tr style="height: 60px;
+   
+            
+                position: sticky;
+                top: 0;
+                background-color: yellow;
+                padding: 50px;
+                font-size: 20px;">
+                    <th *ngFor="let item of columns">{{item.label}}</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr *ngFor="let item of account | paginate: { itemsPerPage: 10,currentPage: p}" style="height: 55px;">
+                    <td>{{item.account_number}}</td>
+                    <td>{{item.balance}}</td>
+
+                    <td>{{item.firstname}} {{item.lastname}}</td>
+
+                    <td>{{item.age}}</td>
+                    <td>{{item.gender}}</td>
+                    <td>{{item.address}}</td>
+                    <td>{{item.employer}}</td>
+                    <td>{{item.email}}</td>
+                    <td>{{item.city}}</td>
+                    <td>{{item.state}}</td>
+                    <td style="display: flex; align-items: center;">
+
+                        <button type="button" class="btn btn-warning" (click)="openEdit(item)" style="height: 55px;">Sửa</button>
+
+                        <button type="button" class="btn btn-danger" (click)="delete(item)" style="margin-left:3px; height: 55px;">Xóa</button>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+    </div>
+</div>
