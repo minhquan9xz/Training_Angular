@@ -38,8 +38,12 @@ export class AppComponent implements OnInit {
       label: 'STT',
     },
     {
+      field: 'account_number',
+      label: 'Số TK',
+    },
+    {
       field: 'balance',
-      label: 'Balance',
+      label: 'Số dư',
     },
     {
       field: 'fullname',
@@ -59,7 +63,7 @@ export class AppComponent implements OnInit {
     },
     {
       field: 'employer',
-      label: 'Employer',
+      label: 'Nhân viên',
     },
     {
       field: 'email',
@@ -213,7 +217,7 @@ export class AppComponent implements OnInit {
       .subscribe(
         (resp: any) => {
           this.getAllAccount();
-          alert('xóa thành công');
+          alert('Xác nhận xóa');
         },
         (err: Error) => {
           alert('Thất bại');

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   HttpRequest,
   HttpResponse,
@@ -7,16 +7,22 @@ import {
   HttpInterceptor,
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
-import {Observable, of, throwError} from 'rxjs';
-import {delay, mergeMap, materialize, dematerialize} from 'rxjs/operators';
-import {createAccount, Account, ParamSearch, createParamSearch} from '../model/account.model';
-import {UUID} from 'angular2-uuid';
-import {Accounts} from '../data/account';
-import {Users} from '../data/user';
+import { Observable, of, throwError } from 'rxjs';
+import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
+import {
+  createAccount,
+  Account,
+  ParamSearch,
+  createParamSearch,
+} from '../model/account.model';
+import { UUID } from 'angular2-uuid';
+import { Accounts } from '../data/account';
+import { Users } from '../data/user';
 
 // array in local storage for registered users
 const users = JSON.parse(localStorage.getItem('users') as string) || Users;
-let accountList = JSON.parse(localStorage.getItem('accountList') as string) || Accounts;
+let accountList =
+  JSON.parse(localStorage.getItem('accountList') as string) || Accounts;
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -24,15 +30,17 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const {url, method, headers, body, params} = request;
+    const { url, method, headers, body, params } = request;
 
     // wrap in delayed observable to simulate server api call
-    return of(null)
-      .pipe(mergeMap(handleRoute))
-      // tslint:disable-next-line:max-line-length
-      .pipe(materialize()) // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)
-      .pipe(delay(500))
-      .pipe(dematerialize());
+    return (
+      of(null)
+        .pipe(mergeMap(handleRoute))
+        // tslint:disable-next-line:max-line-length
+        .pipe(materialize()) // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)
+        .pipe(delay(500))
+        .pipe(dematerialize())
+    );
 
     // tslint:disable-next-line:typedef
     function handleRoute() {
@@ -61,9 +69,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
     // tslint:disable-next-line:typedef
     function authenticate() {
-      const {username, password} = body;
+      const { username, password } = body;
       const user = users.find(
-        (x: { username: any; password: any; }) => x.username === username && x.password === password
+        (x: { username: any; password: any }) =>
+          x.username === username && x.password === password
       );
       if (!user) {
         return error('Username or password is incorrect');
@@ -81,11 +90,13 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     function register() {
       const user = body;
 
-      if (users.find((x: { username: any; }) => x.username === user.username)) {
+      if (users.find((x: { username: any }) => x.username === user.username)) {
         return error('Username "' + user.username + '" is already taken');
       }
 
-      user.id = users.length ? Math.max(...users.map((x: { id: any; }) => x.id)) + 1 : 1;
+      user.id = users.length
+        ? Math.max(...users.map((x: { id: any }) => x.id)) + 1
+        : 1;
       users.push(user);
       localStorage.setItem('users', JSON.stringify(users));
 
@@ -104,15 +115,21 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         last_name: params.has('last_name') ? params.get('last_name') || '' : '',
         address: params.has('address') ? params.get('address') || '' : '',
         email: params.has('email') ? params.get('email') || '' : '',
-        first_name: params.has('first_name') ? params.get('first_name') || '' : '',
+        first_name: params.has('first_name')
+          ? params.get('first_name') || ''
+          : '',
         gender: params.has('gender') ? params.get('gender') || '' : '',
       });
       let rs = accountList;
       if (paramSearch.last_name !== '') {
-        rs = rs.filter((x: Account) => x.lastname.includes(paramSearch.last_name));
+        rs = rs.filter((x: Account) =>
+          x.lastname.includes(paramSearch.last_name)
+        );
       }
       if (paramSearch.first_name !== '') {
-        rs = rs.filter((x: Account) => x.firstname.includes(paramSearch.first_name));
+        rs = rs.filter((x: Account) =>
+          x.firstname.includes(paramSearch.first_name)
+        );
       }
       if (paramSearch.address !== '') {
         rs = rs.filter((x: Account) => x.address.includes(paramSearch.address));
@@ -129,7 +146,12 @@ export class FakeBackendInterceptor implements HttpInterceptor {
       if (rs.length <= paramSearch.limit + paramSearch.start) {
         return ok([...rs].slice(paramSearch.start, rs.length));
       } else {
-        return ok([...rs].slice(paramSearch.start, paramSearch.start + paramSearch.limit));
+        return ok(
+          [...rs].slice(
+            paramSearch.start,
+            paramSearch.start + paramSearch.limit
+          )
+        );
       }
     }
 
@@ -235,7 +257,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
       if (account.balance <= 0) {
         return error('Balance must great than 0 ');
       }
-      const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      const regex =
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       const regEmail = new RegExp(regex);
       if (!regEmail.test(account.email)) {
         return error('Email is wrong format ');
@@ -244,17 +267,17 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
     // tslint:disable-next-line:typedef
     function ok(bodyData: any) {
-      return of(new HttpResponse({status: 200, body: bodyData}));
+      return of(new HttpResponse({ status: 200, body: bodyData }));
     }
 
     // tslint:disable-next-line:typedef
     function error(message: string) {
-      return throwError({error: {message}});
+      return throwError({ error: { message } });
     }
 
     // tslint:disable-next-line:typedef
     function unauthorized() {
-      return throwError({status: 401, error: {message: 'Unauthorised'}});
+      return throwError({ status: 401, error: { message: 'Unauthorised' } });
     }
 
     // tslint:disable-next-line:typedef

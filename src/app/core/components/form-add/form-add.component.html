@@ -3,7 +3,7 @@
 
     <form class="form" [formGroup]="myForm" (ngSubmit)="onSubmit()">
         <div class="inputfield">
-            <label>STT</label>
+            <label>account_number</label>
 
             <div class="inputError">
                 <input type="text" class="input" formControlName="account_number" [style.border]="
@@ -16,7 +16,7 @@
               myForm.get('firstname')?.errors?.required &&
               myForm.get('firstname')?.touched
             ">
-                    <span>STT is required</span>
+                    <span>account_number is required</span>
                 </div>
             </div>
         </div>

@@ -10,3 +10,7 @@ select {
     border-left: none;
     outline: none;
 }
+
+tr:nth-child(2n) {
+    background: rgb(202, 202, 202);
+}

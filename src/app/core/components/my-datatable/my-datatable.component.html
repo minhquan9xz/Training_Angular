@@ -26,45 +26,39 @@
             <button type="button" class="btn btn-primary" style="margin-left: 30px;" (click)="openAddAccount()">Add</button>
         </div>
     </div>
-    <div>
-        <table border="1">
-            <thead>
-                <tr style="height: 60px;
+</div>
+<div>
+    <table style="width: 100%;">
+        <thead>
+            <tr style="height: 45px;
    
             
                 position: sticky;
                 top: 0;
                 background-color: yellow;
                 padding: 50px;
-                font-size: 20px;">
-                    <th *ngFor="let item of columns">{{item.label}}</th>
-                </tr>
-            </thead>
-            <tbody>
+                font-size: 14px;">
+                <th *ngFor="let item of columns">{{item.label}}</th>
+            </tr>
+        </thead>
+        <tbody>
 
-                <tr *ngFor="let item of account | paginate: { itemsPerPage: 10,currentPage: p}" style="height: 55px;">
-                    <td>{{item.account_number}}</td>
-                    <td>{{item.balance}}</td>
-
-                    <td>{{item.firstname}} {{item.lastname}}</td>
-
-                    <td>{{item.age}}</td>
-                    <td>{{item.gender}}</td>
-                    <td>{{item.address}}</td>
-                    <td>{{item.employer}}</td>
-                    <td>{{item.email}}</td>
-                    <td>{{item.city}}</td>
-                    <td>{{item.state}}</td>
-                    <td style="display: flex; align-items: center;">
-
-                        <button type="button" class="btn btn-warning" (click)="openEdit(item)" style="height: 55px;">Sửa</button>
-
-                        <button type="button" class="btn btn-danger" (click)="delete(item)" style="margin-left:3px; height: 55px;">Xóa</button>
-                    </td>
-
-                </tr>
-            </tbody>
-        </table>
-        <pagination-controls (pageChange)="p = $event"></pagination-controls>
-    </div>
+            <tr *ngFor="let item of account | paginate: { itemsPerPage: 25,currentPage: p}; let index=index" style="height: 45px !important; font-size: 14 !important;">
+                <td *ngFor=" let column of columns">
+                    <ng-container [ngSwitch]="column.field">
+                        <span *ngSwitchDefault>{{item[column.field]}}</span>
+                        <span *ngSwitchCase="'fullname'">{{item.firstname}}{{item.lastname}}</span>
+                        <span *ngSwitchCase="'stt'">{{(index + 1)+(p-1)* 25}}</span>
+                        <span *ngSwitchCase="'action'">
+                            <button type="button" class="btn btn-warning" (click)="openEdit(item)"
+                                style="height: 45px !important;">Sửa</button>
+                            <button type="button" class="btn btn-danger" (click)="delete(item)"
+                                style="margin-left:3px; height: 45px !important;">Xóa</button>
+                        </span>
+                    </ng-container>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
 </div>
